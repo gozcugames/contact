@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>İletişim | GozcuGames</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .contact-card {
+            background-color: #ffffff;
+            padding: 40px 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 400px;
+            border-top: 5px solid #007bff;
+        }
+        .brand-title {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #1a252f;
+            text-align: center;
+            margin-bottom: 25px;
+        }
+        .input-group { margin-bottom: 20px; }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        input[type="text"]:focus, textarea:focus {
+            outline: none;
+            border-color: #007bff;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 140px;
+        }
+        .send-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 15px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            width: 100%;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .send-btn:hover { background-color: #0056b3; }
+        .status-msg {
+            text-align: center;
+            margin-top: 15px;
+            font-weight: bold;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="contact-card">
+    <div class="brand-title">GozcuGames</div>
+    
+    <form id="apps-script-form">
+        <div class="input-group">
+            <label for="subject">Konu</label>
+            <input type="text" id="subject" name="subject" placeholder="Mesajınızın konusu..." required>
+        </div>
+
+        <div class="input-group">
+            <label for="message">Mesaj</label>
+            <textarea id="message" name="message" placeholder="Ne hakkında konuşmak istersiniz?" required></textarea>
+        </div>
+
+        <button type="submit" class="send-btn" id="submit-btn">Mail Gönder</button>
+        <div class="status-msg" id="status-msg"></div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('apps-script-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const btn = document.getElementById('submit-btn');
+        const statusMsg = document.getElementById('status-msg');
+        
+        btn.innerText = 'Gönderiliyor...';
+        btn.disabled = true;
+        statusMsg.style.display = 'none';
+
+        const scriptUrl = "https://script.google.com/macros/s/AKfycbx-89xH6bS6WOrvg9Rn3BwiDqQ6fJ7-lETRQBtdCRVdGOwm4x8i5pCCakp9U9Cav3t5dw/exec";
+
+        const formData = new URLSearchParams(new FormData(this));
+
+        fetch(scriptUrl, {
+            method: 'POST',
+            body: formData,
+            mode: 'no-cors'
+        })
+        .then(() => {
+            btn.innerText = 'Mail Gönder';
+            btn.disabled = false;
+            statusMsg.innerText = 'Mesajınız başarıyla gönderildi!';
+            statusMsg.style.color = '#28a745';
+            statusMsg.style.display = 'block';
+            document.getElementById('apps-script-form').reset();
+        })
+        .catch(error => {
+            btn.innerText = 'Mail Gönder';
+            btn.disabled = false;
+            statusMsg.innerText = 'Bir hata oluştu, lütfen tekrar deneyin.';
+            statusMsg.style.color = '#dc3545';
+            statusMsg.style.display = 'block';
+            console.error('Hata:', error);
+        });
+    });
+</script>
+
+</body>
+</html>
