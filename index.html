@@ -1,141 +1,375 @@
 <!DOCTYPE html>
-<html lang="tr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>İletişim | GozcuGames</title>
-    <style>
-        * { box-sizing: border-box; }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f4f7f6;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .contact-card {
-            background-color: #ffffff;
-            padding: 40px 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            width: 100%;
-            max-width: 400px;
-            border-top: 5px solid #007bff;
-        }
-        .brand-title {
-            font-size: 1.8rem;
-            font-weight: 800;
-            color: #1a252f;
-            text-align: center;
-            margin-bottom: 25px;
-        }
-        .input-group { margin-bottom: 20px; }
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            font-family: inherit;
-            font-size: 1rem;
-            transition: border-color 0.3s ease;
-        }
-        input[type="text"]:focus, textarea:focus {
-            outline: none;
-            border-color: #007bff;
-        }
-        textarea {
-            resize: vertical;
-            min-height: 140px;
-        }
-        .send-btn {
-            background-color: #007bff;
-            color: white;
-            border: none;
-            padding: 15px;
-            font-size: 1rem;
-            font-weight: bold;
-            border-radius: 8px;
-            width: 100%;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .send-btn:hover { background-color: #0056b3; }
-        .status-msg {
-            text-align: center;
-            margin-top: 15px;
-            font-weight: bold;
-            display: none;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact | GozcuGames</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0b0e14;
+    --bg-1:#11151f;
+    --card:#141926;
+    --line:rgba(148,163,184,.14);
+    --violet:#fbc376;
+    --cyan:#9677b6;
+    --text:#e8ecf3;
+    --muted:#8b93a7;
+    --danger:#ff6b6b;
+    --ok:#3ddc97;
+    --radius:16px;
+  }
+
+  *{ box-sizing:border-box; }
+
+  html,body{ height:100%; }
+
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:24px;
+    background:
+      radial-gradient(1200px 600px at 15% -10%, rgba(251,195,118,.16), transparent 60%),
+      radial-gradient(900px 500px at 110% 20%, rgba(150,119,182,.12), transparent 55%),
+      var(--bg-0);
+    color:var(--text);
+    font-family:'Inter', -apple-system, sans-serif;
+    position:relative;
+    overflow-x:hidden;
+  }
+
+  /* signature element: rotating radar sweep, "the watcher" */
+  .radar{
+    position:fixed;
+    top:50%; left:50%;
+    width:1400px; height:1400px;
+    transform:translate(-50%,-50%);
+    pointer-events:none;
+    opacity:.5;
+    z-index:0;
+  }
+  .radar-ring{
+    position:absolute; inset:0;
+    border:1px solid rgba(251,195,118,.06);
+    border-radius:50%;
+  }
+  .radar-ring:nth-child(2){ inset:120px; border-color:rgba(251,195,118,.05); }
+  .radar-ring:nth-child(3){ inset:280px; border-color:rgba(150,119,182,.05); }
+  .radar-sweep{
+    position:absolute; inset:0;
+    border-radius:50%;
+    background:conic-gradient(from 0deg, rgba(251,195,118,.22), transparent 28%, transparent 100%);
+    animation:sweep 7s linear infinite;
+  }
+  @keyframes sweep{ to{ transform:rotate(360deg); } }
+
+  @media (prefers-reduced-motion:reduce){
+    .radar-sweep{ animation:none; }
+  }
+
+  .lang-switch{
+    position:fixed;
+    top:20px; right:20px;
+    z-index:20;
+    display:flex;
+    gap:4px;
+    background:var(--bg-1);
+    border:1px solid var(--line);
+    border-radius:999px;
+    padding:4px;
+  }
+  html[dir="rtl"] .lang-switch{ right:auto; left:20px; }
+
+  .lang-switch button{
+    appearance:none;
+    border:none;
+    background:transparent;
+    color:var(--muted);
+    font-family:'Rajdhani', sans-serif;
+    font-weight:600;
+    font-size:.8rem;
+    letter-spacing:.04em;
+    padding:8px 14px;
+    border-radius:999px;
+    cursor:pointer;
+    transition:background .2s ease, color .2s ease;
+  }
+  .lang-switch button.active{
+    background:linear-gradient(135deg, var(--violet), var(--cyan));
+    color:#0b0e14;
+  }
+  .lang-switch button:not(.active):hover{ color:var(--text); }
+
+  .card{
+    position:relative;
+    z-index:10;
+    width:100%;
+    max-width:420px;
+    background:linear-gradient(180deg, var(--card), var(--bg-1));
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:38px 32px 32px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.6), 0 0 0 1px rgba(251,195,118,.04) inset;
+  }
+
+  .eye{
+    width:46px; height:46px;
+    margin:0 auto 18px;
+    display:block;
+  }
+  .eye .iris{ transform-origin:center; animation:blink 4.5s ease-in-out infinite; }
+  @keyframes blink{
+    0%, 92%, 100% { transform:scaleY(1); }
+    95% { transform:scaleY(0.08); }
+  }
+  @media (prefers-reduced-motion:reduce){ .eye .iris{ animation:none; } }
+
+  .brand{
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:1.65rem;
+    letter-spacing:.02em;
+    text-align:center;
+    margin:0 0 2px;
+    background:linear-gradient(135deg, #fff, var(--cyan));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .tagline{
+    text-align:center;
+    color:var(--muted);
+    font-size:.82rem;
+    margin:0 0 28px;
+    letter-spacing:.02em;
+  }
+
+  .field{ margin-bottom:18px; }
+  .field label{
+    display:block;
+    margin-bottom:7px;
+    font-size:.82rem;
+    font-weight:600;
+    color:var(--muted);
+    letter-spacing:.02em;
+  }
+  .field input,
+  .field textarea{
+    width:100%;
+    background:var(--bg-0);
+    border:1px solid var(--line);
+    color:var(--text);
+    border-radius:10px;
+    padding:12px 14px;
+    font-family:inherit;
+    font-size:.95rem;
+    transition:border-color .2s ease, box-shadow .2s ease;
+  }
+  html[dir="rtl"] .field input,
+  html[dir="rtl"] .field textarea{ font-family:'Tajawal', 'Inter', sans-serif; }
+
+  .field input::placeholder,
+  .field textarea::placeholder{ color:#4b5468; }
+  .field input:focus,
+  .field textarea:focus{
+    outline:none;
+    border-color:var(--violet);
+    box-shadow:0 0 0 3px rgba(251,195,118,.18);
+  }
+  .field textarea{ min-height:130px; resize:vertical; }
+
+  .send-btn{
+    width:100%;
+    border:none;
+    padding:14px;
+    border-radius:10px;
+    font-family:'Rajdhani', sans-serif;
+    font-weight:700;
+    font-size:1rem;
+    letter-spacing:.04em;
+    color:#0b0e14;
+    background:linear-gradient(135deg, var(--violet), var(--cyan));
+    cursor:pointer;
+    transition:filter .2s ease, transform .05s ease;
+  }
+  .send-btn:hover{ filter:brightness(1.08); }
+  .send-btn:active{ transform:translateY(1px); }
+  .send-btn:disabled{ opacity:.6; cursor:default; }
+  .send-btn:focus-visible,
+  .lang-switch button:focus-visible{
+    outline:2px solid var(--cyan);
+    outline-offset:2px;
+  }
+
+  .status-msg{
+    text-align:center;
+    margin-top:14px;
+    font-size:.88rem;
+    font-weight:600;
+    display:none;
+  }
+  .status-msg.ok{ color:var(--ok); }
+  .status-msg.err{ color:var(--danger); }
+
+  @media (max-width:480px){
+    .card{ padding:30px 20px 24px; border-radius:14px; }
+    .lang-switch{ top:14px; right:14px; }
+    html[dir="rtl"] .lang-switch{ right:auto; left:14px; }
+    .brand{ font-size:1.4rem; }
+  }
+</style>
 </head>
 <body>
 
-<div class="contact-card">
-    <div class="brand-title">GozcuGames</div>
-    
-    <form id="apps-script-form">
-        <div class="input-group">
-            <label for="subject">Konu</label>
-            <input type="text" id="subject" name="subject" placeholder="Mesajınızın konusu..." required>
-        </div>
+<div class="radar" aria-hidden="true">
+  <div class="radar-ring"></div>
+  <div class="radar-ring"></div>
+  <div class="radar-ring"></div>
+  <div class="radar-sweep"></div>
+</div>
 
-        <div class="input-group">
-            <label for="message">Mesaj</label>
-            <textarea id="message" name="message" placeholder="Ne hakkında konuşmak istersiniz?" required></textarea>
-        </div>
+<div class="lang-switch" role="group" aria-label="Language">
+  <button type="button" data-lang="en" class="active">EN</button>
+  <button type="button" data-lang="tr">TR</button>
+  <button type="button" data-lang="ar">AR</button>
+</div>
 
-        <button type="submit" class="send-btn" id="submit-btn">Mail Gönder</button>
-        <div class="status-msg" id="status-msg"></div>
-    </form>
+<div class="card">
+  <svg class="eye" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M2 24C2 24 11 10 24 10C37 10 46 24 46 24C46 24 37 38 24 38C11 38 2 24 2 24Z" stroke="#fbc376" stroke-width="2" stroke-linejoin="round"/>
+    <g class="iris">
+      <circle cx="24" cy="24" r="8" fill="url(#irisGrad)"/>
+      <circle cx="24" cy="24" r="3" fill="#0b0e14"/>
+    </g>
+    <defs>
+      <linearGradient id="irisGrad" x1="16" y1="16" x2="32" y2="32" gradientUnits="userSpaceOnUse">
+        <stop stop-color="#fbc376"/>
+        <stop offset="1" stop-color="#9677b6"/>
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <p class="brand">GozcuGames</p>
+  <p class="tagline" data-i18n="tagline">The watcher is listening. Tell us what's on your mind.</p>
+
+  <form id="apps-script-form">
+    <div class="field">
+      <label for="subject" data-i18n="subjectLabel">Subject</label>
+      <input type="text" id="subject" name="subject" data-i18n-placeholder="subjectPlaceholder" placeholder="What's this about?" required>
+    </div>
+
+    <div class="field">
+      <label for="message" data-i18n="messageLabel">Message</label>
+      <textarea id="message" name="message" data-i18n-placeholder="messagePlaceholder" placeholder="What would you like to talk about?" required></textarea>
+    </div>
+
+    <button type="submit" class="send-btn" id="submit-btn" data-i18n="send">Send message</button>
+    <div class="status-msg" id="status-msg"></div>
+  </form>
 </div>
 
 <script>
-    document.getElementById('apps-script-form').addEventListener('submit', function(event) {
-        event.preventDefault();
+  const i18n = {
+    en: {
+      dir: 'ltr',
+      tagline: "The watcher is listening. Tell us what's on your mind.",
+      subjectLabel: "Subject",
+      subjectPlaceholder: "What's this about?",
+      messageLabel: "Message",
+      messagePlaceholder: "What would you like to talk about?",
+      send: "Send message",
+      sending: "Sending…",
+      ok: "Your message was sent successfully!",
+      err: "Something went wrong, please try again."
+    },
+    tr: {
+      dir: 'ltr',
+      tagline: "Gözcü sizi dinliyor. Aklınızdakini bize anlatın.",
+      subjectLabel: "Konu",
+      subjectPlaceholder: "Mesajınızın konusu…",
+      messageLabel: "Mesaj",
+      messagePlaceholder: "Ne hakkında konuşmak istersiniz?",
+      send: "Mail Gönder",
+      sending: "Gönderiliyor…",
+      ok: "Mesajınız başarıyla gönderildi!",
+      err: "Bir hata oluştu, lütfen tekrar deneyin."
+    },
+    ar: {
+      dir: 'rtl',
+      tagline: "المُراقب يستمع إليك. أخبرنا بما يدور في ذهنك.",
+      subjectLabel: "الموضوع",
+      subjectPlaceholder: "ما موضوع رسالتك؟",
+      messageLabel: "الرسالة",
+      messagePlaceholder: "بماذا تود إخبارنا؟",
+      send: "إرسال الرسالة",
+      sending: "جارٍ الإرسال…",
+      ok: "تم إرسال رسالتك بنجاح!",
+      err: "حدث خطأ ما، يرجى المحاولة مرة أخرى."
+    }
+  };
 
-        const btn = document.getElementById('submit-btn');
-        const statusMsg = document.getElementById('status-msg');
-        
-        btn.innerText = 'Gönderiliyor...';
-        btn.disabled = true;
-        statusMsg.style.display = 'none';
+  const submitBtn = document.getElementById('submit-btn');
+  let currentLang = 'en';
 
-        const scriptUrl = "https://script.google.com/macros/s/AKfycbx-89xH6bS6WOrvg9Rn3BwiDqQ6fJ7-lETRQBtdCRVdGOwm4x8i5pCCakp9U9Cav3t5dw/exec";
+  function applyLang(lang){
+    currentLang = lang;
+    const t = i18n[lang];
+    document.documentElement.lang = lang;
+    document.documentElement.dir = t.dir;
 
-        const formData = new URLSearchParams(new FormData(this));
-
-        fetch(scriptUrl, {
-            method: 'POST',
-            body: formData,
-            mode: 'no-cors'
-        })
-        .then(() => {
-            btn.innerText = 'Mail Gönder';
-            btn.disabled = false;
-            statusMsg.innerText = 'Mesajınız başarıyla gönderildi!';
-            statusMsg.style.color = '#28a745';
-            statusMsg.style.display = 'block';
-            document.getElementById('apps-script-form').reset();
-        })
-        .catch(error => {
-            btn.innerText = 'Mail Gönder';
-            btn.disabled = false;
-            statusMsg.innerText = 'Bir hata oluştu, lütfen tekrar deneyin.';
-            statusMsg.style.color = '#dc3545';
-            statusMsg.style.display = 'block';
-            console.error('Hata:', error);
-        });
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+      const key = el.getAttribute('data-i18n');
+      if (t[key]) el.textContent = t[key];
     });
+    document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+      const key = el.getAttribute('data-i18n-placeholder');
+      if (t[key]) el.placeholder = t[key];
+    });
+
+    document.querySelectorAll('.lang-switch button').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.lang === lang);
+    });
+  }
+
+  document.querySelectorAll('.lang-switch button').forEach(btn => {
+    btn.addEventListener('click', () => applyLang(btn.dataset.lang));
+  });
+
+  document.getElementById('apps-script-form').addEventListener('submit', function(event){
+    event.preventDefault();
+
+    const statusMsg = document.getElementById('status-msg');
+    const t = i18n[currentLang];
+
+    submitBtn.textContent = t.sending;
+    submitBtn.disabled = true;
+    statusMsg.style.display = 'none';
+
+    const scriptUrl = "https://script.google.com/macros/s/AKfycbx-89xH6bS6WOrvg9Rn3BwiDqQ6fJ7-lETRQBtdCRVdGOwm4x8i5pCCakp9U9Cav3t5dw/exec";
+    const formData = new URLSearchParams(new FormData(this));
+
+    fetch(scriptUrl, { method: 'POST', body: formData, mode: 'no-cors' })
+      .then(() => {
+        submitBtn.textContent = t.send;
+        submitBtn.disabled = false;
+        statusMsg.textContent = t.ok;
+        statusMsg.className = 'status-msg ok';
+        statusMsg.style.display = 'block';
+        this.reset();
+      })
+      .catch(error => {
+        submitBtn.textContent = t.send;
+        submitBtn.disabled = false;
+        statusMsg.textContent = t.err;
+        statusMsg.className = 'status-msg err';
+        statusMsg.style.display = 'block';
+        console.error('Error:', error);
+      });
+  });
 </script>
 
 </body>
